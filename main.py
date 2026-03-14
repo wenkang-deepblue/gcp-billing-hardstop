@@ -26,7 +26,7 @@ def _env_bool(name: str, default: bool) -> bool:
 
 def _log(message: str, severity: str = "INFO", **fields: Any) -> None:
     payload = {"severity": severity, "message": message, **fields}
-    getattr(LOGGER, severity.lower(), LOGGER.info)(json.dumps(payload, ensure_ascii=True))
+    print(json.dumps(payload, ensure_ascii=False), flush=True)
 
 
 def get_project_id() -> str:
