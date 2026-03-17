@@ -169,14 +169,6 @@ gcloud projects add-iam-policy-binding YOUR_PROJECT_ID \
     --role="roles/iam.serviceAccountTokenCreator"
 ```
 
-### 3. Grant the trigger permission to invoke Cloud Run
-```bash
-gcloud run services add-iam-policy-binding billing-killer \
-    --region=us-central1 \
-    --member="serviceAccount:XXXXXXXXXXX-compute@developer.gserviceaccount.com" \
-    --role="roles/run.invoker"
-```
-
 ### 4. Grant `Billing Account Administrator` role
 This is required for the function to physically detach the billing account.
 Navigation path: Hamburger menu -> `Billing` -> `Account Management` -> Right sidebar `Add principal` -> Enter your service account `XXXXXXXXXXX-compute@developer.gserviceaccount.com` -> Select role `Billing Account Administrator` -> `Save`.
@@ -202,7 +194,15 @@ gcloud functions deploy billing-killer \
 
 *Note: If prompted `API [eventarc.googleapis.com] not enabled`, enter `y` to confirm.*
 
-## Step 8: Validate in Simulation Mode
+## Step 8: Grant the trigger permission to invoke Cloud Run
+```bash
+gcloud run services add-iam-policy-binding billing-killer \
+    --region=us-central1 \
+    --member="serviceAccount:XXXXXXXXXXX-compute@developer.gserviceaccount.com" \
+    --role="roles/run.invoker"
+```
+
+## Step 9: Validate in Simulation Mode
 
 Verify that the notification reaches the function and is parsed correctly without causing real downtime.
 
@@ -238,7 +238,7 @@ Verify that the notification reaches the function and is parsed correctly withou
 
    If these logs appear, your Pub/Sub-to-Function pipeline and environment variables are correctly configured.
 
-## Step 9: Switch to Real Deactivation Mode
+## Step 10: Switch to Real Deactivation Mode
 
 Once simulation is successful, deploy again with `SIMULATE_DEACTIVATION=false`. This will overwrite the simulation version.
 
@@ -253,7 +253,7 @@ gcloud functions deploy billing-killer \
     --set-env-vars TARGET_PROJECT_ID=YOUR_PROJECT_ID,SIMULATE_DEACTIVATION=false,EXPECTED_BUDGET_NAME=Hard-Stop-Budget
 ```
 
-## Step 10: Post-Deployment Checklist
+## Step 11: Post-Deployment Checklist
 
 - [ ] Is the function deployed in the correct project?
 - [ ] Does `TARGET_PROJECT_ID` match the project you want to protect?
@@ -570,17 +570,6 @@ gcloud projects add-iam-policy-binding YOUR_PROJECT_ID \
     --role="roles/iam.serviceAccountTokenCreator"
 ```
 
-### 第三步：赋予云函数触发器“调用 Cloud Run”的权限
-
-默认的触发器使用的是计算引擎服务账号，需要让它有资格调用你的 billing-killer。运行以下命令：
-
-```bash
-gcloud run services add-iam-policy-binding billing-killer \
-    --region=us-central1 \
-    --member="serviceAccount:XXXXXXXXXXX-compute@developer.gserviceaccount.com" \
-    --role="roles/run.invoker"
-```
-
 ### 第四步：在GCP控制台授予 `Billing Account Administrator` 权限给你的服务账号 `XXXXXXXXXXX-compute@developer.gserviceaccount.com`
 
 操作路径：左上角三条横线  (或直接在顶部搜索框中搜索 `billing`)  --> `Billing` --> `Account Management` --> 右侧边栏 `Add principal` --> `New pricipals` 输入框中输入你的服务账号 `XXXXXXXXXXX-compute@developer.gserviceaccount.com` --> `Select a role` 选择 `Billing Account Administrator` --> `Save`
@@ -634,8 +623,19 @@ gcloud functions deploy billing-killer \
 
 2. 一个预算只连一个专用 topic
 
+## 第 8 步：赋予云函数触发器“调用 Cloud Run”的权限
 
-## 第 8 步：模拟验证模式
+默认的触发器使用的是计算引擎服务账号，需要让它有资格调用你的 billing-killer。运行以下命令：
+
+```bash
+gcloud run services add-iam-policy-binding billing-killer \
+    --region=us-central1 \
+    --member="serviceAccount:XXXXXXXXXXX-compute@developer.gserviceaccount.com" \
+    --role="roles/run.invoker"
+```
+
+
+## 第 9 步：模拟验证模式
 
 先验证“通知能到函数、函数能识别、日志能写出”，不要一上来就真实断电。
 
@@ -687,7 +687,7 @@ gcloud functions deploy billing-killer \
 
     3. 环境变量 `TARGET_PROJECT_ID`, `EXPECTED_BUDGET_NAME` 没配错
 
-## 第 9 步：切换到真实停用模式
+## 第 10 步：切换到真实停用模式
 
 验证通过后，把环境变量改成真实模式，直接运行下面的命令即可，无须删除之前部署的模拟验证版本，将会自动覆盖：
 
@@ -706,7 +706,7 @@ gcloud functions deploy billing-killer \
 
 到这一步后，一旦预算通知到达且 `costAmount >= budgetAmount`，函数会尝试解除目标项目的 billing 绑定。
 
-## 第 10 步：建议的上线后检查项
+## 第 11 步：建议的上线后检查项
 
 上线后建议额外确认以下内容：
 
