@@ -169,7 +169,7 @@ gcloud projects add-iam-policy-binding YOUR_PROJECT_ID \
     --role="roles/iam.serviceAccountTokenCreator"
 ```
 
-### 4. Grant `Billing Account Administrator` role
+### 3. Grant `Billing Account Administrator` role
 This is required for the function to physically detach the billing account.
 Navigation path: Hamburger menu -> `Billing` -> `Account Management` -> Right sidebar `Add principal` -> Enter your service account `XXXXXXXXXXX-compute@developer.gserviceaccount.com` -> Select role `Billing Account Administrator` -> `Save`.
 
@@ -570,7 +570,7 @@ gcloud projects add-iam-policy-binding YOUR_PROJECT_ID \
     --role="roles/iam.serviceAccountTokenCreator"
 ```
 
-### 第四步：在GCP控制台授予 `Billing Account Administrator` 权限给你的服务账号 `XXXXXXXXXXX-compute@developer.gserviceaccount.com`
+### 第三步：在GCP控制台授予 `Billing Account Administrator` 权限给你的服务账号 `XXXXXXXXXXX-compute@developer.gserviceaccount.com`
 
 操作路径：左上角三条横线  (或直接在顶部搜索框中搜索 `billing`)  --> `Billing` --> `Account Management` --> 右侧边栏 `Add principal` --> `New pricipals` 输入框中输入你的服务账号 `XXXXXXXXXXX-compute@developer.gserviceaccount.com` --> `Select a role` 选择 `Billing Account Administrator` --> `Save`
 
